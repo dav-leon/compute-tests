@@ -94,6 +94,7 @@ async function compute() {
     object.traverse((child) => {
 
       if(child.isLine){
+        console.log(child)
 
         if (child.userData.attributes.userStringCount > 0) {
           
