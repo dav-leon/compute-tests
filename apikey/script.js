@@ -1,11 +1,9 @@
 // Import libraries
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.137.5/examples/jsm/controls/OrbitControls.js";
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.126.0/build/three.module.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.126.0/examples/jsm/controls/OrbitControls.js";
 import rhino3dm from "https://cdn.jsdelivr.net/npm/rhino3dm@7.11.1/rhino3dm.module.js";
 import { RhinoCompute } from "https://cdn.jsdelivr.net/npm/compute-rhino3d@0.13.0-beta/compute.rhino3d.module.js";
-import { Rhino3dmLoader } from "https://cdn.jsdelivr.net/npm/three@0.137.5/examples/jsm/loaders/3DMLoader.js";
-
-
+import { Rhino3dmLoader } from "https://cdn.jsdelivr.net/npm/three@0.124.0/examples/jsm/loaders/3DMLoader.js";
 
 const definitionName = "test.gh";
 
@@ -21,9 +19,9 @@ rhino3dm().then(async (m) => {
   console.log("Loaded rhino3dm.");
   rhino = m; // global
 
-  //RhinoCompute.url = "http://localhost:8081/"; //debugging locally.
-  RhinoCompute.url = 'https://macad2021.compute.rhino3d.com/'
+  RhinoCompute.url = getAuth( 'RHINO_COMPUTE_URL' ) // RhinoCompute server url. Use http://localhost:8081 if debugging locally.
   RhinoCompute.apiKey = getAuth( 'RHINO_COMPUTE_KEY' )  // RhinoCompute server api key. Leave blank if debugging locally.
+    
 
 
   const url = definitionName;
@@ -69,18 +67,18 @@ async function compute() {
 
 
 
-  // //transfer geometry userstring to object attribute for some objects
-  // let objects = doc.objects();
-  // for ( let i = 0; i < objects.count; i++ ) {
-  //   const rhinoObject = objects.get( i );
+  //transfer geometry userstring to object attribute for some objects
+  let objects = doc.objects();
+  for ( let i = 0; i < objects.count; i++ ) {
+    const rhinoObject = objects.get( i );
 
-  //   if ( rhinoObject.geometry().userStringCount > 0 ) {
-  //     const g_userStrings = rhinoObject.geometry().getUserStrings()
-  //     if( g_userStrings[0][0] == "geo") {
-  //       rhinoObject.attributes().setUserString(g_userStrings[0][0], g_userStrings[0][1])
-  //     }
-  //   }
-  // }
+    if ( rhinoObject.geometry().userStringCount > 0 ) {
+      const g_userStrings = rhinoObject.geometry().getUserStrings()
+      if( g_userStrings[0][0] == "geo") {
+        rhinoObject.attributes().setUserString(g_userStrings[0][0], g_userStrings[0][1])
+      }
+    }
+  }
 
 
   scene.traverse((child) => {
@@ -98,14 +96,12 @@ async function compute() {
     object.traverse((child) => {
 
       if(child.isLine){
-        //console.log(child)
-        console.log(child.userData.attributes.geometry.userStrings)
+        console.log(child)
 
-
-        if (child.userData.attributes.geometry.userStringCount > 0) {
+        if (child.hasOwnProperty("userStringCount") && child.userData.attributes.userStringCount > 0) {
           
             //get color from userStrings
-            const colorData = child.userData.attributes.geometry.uerStrings[0]
+            const colorData = child.userData.attributes.userStrings[0]
             const col = colorData[1];
 
             //convert color from userstring to THREE color and assign it
@@ -114,6 +110,7 @@ async function compute() {
             child.material = mat;
           
         }
+
 
     }
 
@@ -196,3 +193,4 @@ function getAuth( key ) {
   }
   return value
 }
+

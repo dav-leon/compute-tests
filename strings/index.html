@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8"npm>
+        <meta charset="utf-8">
         <title>RhinoCompute: userstring sample</title>
         <style>
             body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
@@ -27,30 +27,13 @@
                 100% { transform: rotate(360deg); }
             }
         </style>
-
-<head>
-    <script type="importmap">
-        {
-            "imports": {
-              "three": "https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.module.js",
-              "three/examples/jsm/controls/OrbitControls":"./jsm/controls/OrbitControls.js",
-              "three/examples/jsm/libs/stats.module":"./jsm/libs/stats.module.js"
-            
-            }
-          }
-    </script>
-    
-</head>
-
     </head>
     <body>
         <div id="loader"></div> 
         <div id="container">
             <div id="overlay">
-                <div>
-                    <input type="range" id="count" name="count" min="1" max="50" value="1" step="1">
-                    <label for="count">Count</label>
-                </div>
+                <input placeholder="Enter some text" name="name"/>
+                <p id="values"></p>
 
             </div>
         </div>
